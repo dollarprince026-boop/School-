@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HustleNet School Management ERP — One Platform. Every School Operation.</title>
+<meta name="description" content="Manage students, admissions, fees, attendance, exams and staff from one connected platform. Built for Ugandan schools." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+/* ============================================================
+   1) DESIGN SYSTEM  (was css/style.css)
+   ============================================================ */
+:root{
+  --brand-navy:#0f1e3d; --brand-navy-2:#16294f; --brand-navy-3:#1c3260;
+  --brand-teal:#0fb9b1; --brand-teal-dark:#0a9d96; --brand-cyan:#22d3ee;
+  --purple:#7c3aed; --purple-l:#ede9fe;
+  --blue:#2563eb;   --blue-l:#dbeafe;
+  --green:#16a34a;  --green-l:#dcfce7;
+  --orange:#ea580c; --orange-l:#ffedd5;
+  --teal:#0fb9b1;   --teal-l:#ccfbf1;
+  --bg:#f4f6fb; --surface:#fff; --border:#e5e9f2;
+  --text:#0f172a; --text-2:#475569; --text-3:#94a3b8;
+  --success:#16a34a; --warning:#f59e0b; --danger:#dc2626; --info:#2563eb;
+  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-xl:20px; --r-full:999px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow-md:0 4px 12px rgba(15,23,42,.07);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.10);
+  --sidebar-w:260px; --sidebar-w-collapsed:76px; --topbar-h:64px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--brand-teal-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer;border:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:var(--r-md);font-weight:600;font-size:14px;transition:all .15s ease;white-space:nowrap;text-decoration:none}
+.btn-primary{background:var(--brand-teal);color:#fff}
+.btn-primary:hover{background:var(--brand-teal-dark);text-decoration:none}
+.btn-navy{background:var(--brand-navy);color:#fff}
+.btn-navy:hover{background:var(--brand-navy-2);text-decoration:none}
+.btn-outline{background:transparent;color:var(--brand-navy);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--bg);text-decoration:none}
+.btn-ghost{background:transparent;color:var(--text-2)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-block{width:100%}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.card-pad{padding:20px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-title{font-size:15px;font-weight:700;margin:0}
+.card-sub{font-size:12px;color:var(--text-3);margin:2px 0 0}
+
+.input,.select,.textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r-md);font-size:14px;font-family:inherit;background:#fff;color:var(--text);transition:border-color .15s}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--brand-teal);box-shadow:0 0 0 3px rgba(15,185,177,.15)}
+.textarea{resize:vertical;min-height:90px}
+.label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-2)}
+.field{margin-bottom:16px}
+.field-error{color:var(--danger);font-size:12px;margin-top:4px}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:var(--r-full);font-size:12px;font-weight:600}
+.badge-success{background:var(--green-l);color:#15803d}
+.badge-warning{background:var(--orange-l);color:#c2410c}
+.badge-danger{background:#fee2e2;color:#b91c1c}
+.badge-info{background:var(--blue-l);color:#1d4ed8}
+.badge-neutral{background:#f1f5f9;color:#475569}
+
+.table-wrap{overflow-x:auto}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);font-size:13.5px}
+.table th{font-weight:600;color:var(--text-3);text-transform:uppercase;font-size:11px;letter-spacing:.04em;background:#fafbfd}
+.table tr:hover td{background:#fafbfd}
+
+.flex{display:flex}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+.mt-2{margin-top:8px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+.text-muted{color:var(--text-3)}
+.text-sm{font-size:13px}
+.text-xs{font-size:12px}
+.hidden{display:none !important}
+
+/* ============================================================
+   2) DASHBOARD SHELL  (was css/dashboard.css)
+   ============================================================ */
+.app-shell{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--brand-navy);color:#cfd9ec;display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;transition:width .2s ease}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:20px 20px 16px;color:#fff;font-weight:800;font-size:16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-brand .logo-mark{width:34px;height:34px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,var(--brand-teal),var(--brand-cyan));display:grid;place-items:center;color:#fff;font-weight:800}
+.sidebar-brand .brand-text small{display:block;font-size:10px;font-weight:500;opacity:.6;letter-spacing:.06em}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 10px}
+.sidebar-nav::-webkit-scrollbar{width:6px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.nav-section{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:#6c7ea0;padding:14px 12px 6px;font-weight:700}
+.nav-item{display:flex;align-items:center;gap:12px;padding:9px 12px;margin:2px 0;border-radius:var(--r-md);color:#cfd9ec;font-size:13.5px;font-weight:500;transition:background .12s,color .12s;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;text-decoration:none}
+.nav-item.active{background:linear-gradient(90deg,rgba(15,185,177,.22),rgba(34,211,238,.08));color:#fff;box-shadow:inset 3px 0 0 var(--brand-teal)}
+.nav-item .ico{width:18px;height:18px;flex-shrink:0;opacity:.9}
+.nav-item .badge-mini{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700}
+.sidebar-footer{padding:12px 10px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.app-shell.collapsed .sidebar{width:var(--sidebar-w-collapsed)}
+.app-shell.collapsed .sidebar .nav-item span,
+.app-shell.collapsed .sidebar .nav-section,
+.app-shell.collapsed .sidebar .brand-text,
+.app-shell.collapsed .sidebar .sidebar-footer{display:none}
+.app-shell.collapsed .sidebar .nav-item{justify-content:center;padding:11px}
+.app-shell.collapsed .main{margin-left:var(--sidebar-w-collapsed)}
+
+.main{flex:1;margin-left:var(--sidebar-w);transition:margin-left .2s ease;min-width:0}
+.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 24px;position:sticky;top:0;z-index:50}
+.topbar .icon-btn{width:38px;height:38px;border-radius:var(--r-md);background:transparent;display:grid;place-items:center;color:var(--text-2);position:relative}
+.topbar .icon-btn:hover{background:var(--bg)}
+.topbar .icon-btn .dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--danger);border:2px solid #fff}
+.topbar-search{flex:1;max-width:380px}
+.topbar-search input{width:100%;padding:9px 14px 9px 38px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--bg);font-size:13px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2' viewBox='0 0 24 24'><circle cx='11' cy='11' r='7'/><path d='m21 21-4.3-4.3'/></svg>");background-repeat:no-repeat;background-position:12px center}
+.topbar-spacer{flex:1}
+.academic-pill{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:var(--r-md);font-size:13px;font-weight:600;color:var(--text);background:#fff}
+.user-menu{display:flex;align-items:center;gap:10px;padding:4px 8px 4px 4px;border-radius:var(--r-full);border:1px solid var(--border);background:#fff;cursor:pointer}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand-teal),var(--brand-cyan));color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user-info{line-height:1.15;text-align:left}
+.user-info strong{display:block;font-size:13px}
+.user-info small{color:var(--text-3);font-size:11px}
+
+.page{padding:24px;max-width:1600px;margin:0 auto}
+.page-head{margin-bottom:20px}
+.page-title{font-size:22px;font-weight:800;margin:0 0 4px}
+.page-sub{color:var(--text-3);font-size:13.5px;margin:0}
+
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px}
+.stat-card{background:var(--surface);border-radius:var(--r-lg);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.stat-card .stat-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;margin-bottom:12px}
+.stat-card .stat-value{font-size:26px;font-weight:800;line-height:1.1}
+.stat-card .stat-label{color:var(--text-3);font-size:12.5px;font-weight:500;margin-top:4px}
+.stat-card .stat-trend{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:var(--r-full)}
+.stat-trend.up{background:var(--green-l);color:#15803d}
+.stat-trend.down{background:#fee2e2;color:#b91c1c}
+.stat-trend.flat{background:#f1f5f9;color:#64748b}
+.stat-card.purple{background:linear-gradient(135deg,#fff,#f5f0ff)}
+.stat-card.purple .stat-icon{background:var(--purple-l);color:var(--purple)}
+.stat-card.blue{background:linear-gradient(135deg,#fff,#eef4ff)}
+.stat-card.blue .stat-icon{background:var(--blue-l);color:var(--blue)}
+.stat-card.green{background:linear-gradient(135deg,#fff,#f0fdf4)}
+.stat-card.green .stat-icon{background:var(--green-l);color:var(--green)}
+.stat-card.orange{background:linear-gradient(135deg,#fff,#fff7ed)}
+.stat-card.orange .stat-icon{background:var(--orange-l);color:var(--orange)}
+.stat-card.teal{background:linear-gradient(135deg,#fff,#ecfeff)}
+.stat-card.teal .stat-icon{background:var(--teal-l);color:var(--teal)}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+.section-gap{margin-bottom:20px}
+
+.progress-row{display:flex;align-items:center;justify-content:space-between;margin:12px 0}
+.progress-row .pr-label{font-size:13px;color:var(--text-2);font-weight:500}
+.progress-row .pr-val{font-weight:700;font-size:13px}
+.progress-bar{height:8px;background:#eef2f8;border-radius:4px;overflow:hidden;margin-top:6px}
+.progress-bar>span{display:block;height:100%;border-radius:4px}
+
+.empty-state{text-align:center;padding:32px 16px;color:var(--text-3);font-size:13px}
+.empty-state .es-icon{font-size:32px;margin-bottom:8px;opacity:.4}
+
+.activity-list{list-style:none;padding:0;margin:0}
+.activity-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-size:14px}
+.activity-body{flex:1;min-width:0}
+.activity-body .at{font-size:13px;font-weight:600}
+.activity-body .ad{font-size:12px;color:var(--text-3)}
+
+.schedule-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.schedule-row:last-child{border-bottom:none}
+.schedule-time{width:58px;text-align:center;background:var(--bg);border-radius:var(--r-sm);padding:4px 0;font-size:11px;font-weight:700;color:var(--text-2);flex-shrink:0}
+.schedule-body{flex:1}
+.schedule-body .sb-name{font-size:13px;font-weight:600}
+.schedule-body .sb-meta{font-size:11.5px;color:var(--text-3)}
+
+.chart-box{position:relative;height:280px}
+.chart-box.sm{height:200px}
+
+.demo-banner{background:linear-gradient(90deg,#fef3c7,#fde68a);color:#78350f;padding:8px 16px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px;justify-content:center;border-bottom:1px solid #fcd34d}
+.demo-banner .db-tag{background:#b45309;color:#fff;padding:1px 8px;border-radius:4px;font-size:10px}
+
+/* ============================================================
+   3) HOMEPAGE  (was css/home.css)
+   ============================================================ */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.home-nav{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:60}
+.nav-inner{display:flex;align-items:center;gap:32px;height:68px}
+.nav-brand{display:flex;align-items:center;gap:10px;color:var(--brand-navy);text-decoration:none}
+.nav-brand .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--brand-teal),var(--brand-cyan));display:grid;place-items:center;color:#fff;font-weight:800}
+.nav-brand strong{display:block;font-size:15px;line-height:1}
+.nav-brand small{font-size:10px;letter-spacing:.08em;color:var(--text-3);font-weight:700}
+.nav-links{display:flex;gap:26px;flex:1}
+.nav-links a{color:var(--text-2);font-size:14px;font-weight:500}
+.nav-links a:hover{color:var(--brand-teal-dark);text-decoration:none}
+.nav-cta{display:flex;gap:8px}
+
+.hero{padding:72px 0 88px;background:linear-gradient(160deg,#f7fafc 0%,#eaf4f8 100%);overflow:hidden}
+.hero-inner{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.hero-tag{display:inline-block;background:rgba(15,185,177,.12);color:var(--brand-teal-dark);font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;margin-bottom:18px}
+.hero-copy h1{font-size:44px;line-height:1.1;font-weight:900;letter-spacing:-.02em;margin:0 0 18px}
+.hero-copy h1 .accent{color:var(--brand-teal-dark)}
+.hero-copy p{font-size:16px;color:var(--text-2);margin:0 0 26px;line-height:1.6}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+.hero-stats{display:flex;gap:28px}
+.hero-stats strong{display:block;font-size:18px}
+.hero-stats small{color:var(--text-3);font-size:12px}
+
+.preview-window{background:#fff;border-radius:14px;box-shadow:0 30px 60px -20px rgba(15,23,42,.25);overflow:hidden;border:1px solid var(--border)}
+.preview-bar{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);background:#f8fafc}
+.preview-bar span{width:10px;height:10px;border-radius:50%;background:#e2e8f0}
+.preview-bar span:nth-child(1){background:#fca5a5}
+.preview-bar span:nth-child(2){background:#fcd34d}
+.preview-bar span:nth-child(3){background:#86efac}
+.preview-body{display:grid;grid-template-columns:120px 1fr;height:320px}
+.pv-sidebar{background:var(--brand-navy);padding:14px 10px}
+.pv-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--brand-teal),var(--brand-cyan));display:grid;place-items:center;color:#fff;font-weight:800;margin-bottom:18px}
+.pv-item{height:10px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:10px}
+.pv-item.active{background:rgba(15,185,177,.5)}
+.pv-main{padding:16px;background:var(--bg)}
+.pv-top{height:24px;background:#fff;border-radius:6px;margin-bottom:14px}
+.pv-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.pv-card{height:54px;border-radius:8px}
+.pv-card.c1{background:linear-gradient(135deg,#fff,#f5f0ff);border-left:3px solid var(--purple)}
+.pv-card.c2{background:linear-gradient(135deg,#fff,#eef4ff);border-left:3px solid var(--blue)}
+.pv-card.c3{background:linear-gradient(135deg,#fff,#f0fdf4);border-left:3px solid var(--green)}
+.pv-card.c4{background:linear-gradient(135deg,#fff,#ecfeff);border-left:3px solid var(--teal)}
+.pv-chart{height:150px;background:#fff;border-radius:8px;position:relative;background-image:linear-gradient(#f1f5f9 1px,transparent 1px);background-size:100% 30px}
+.pv-chart::after{content:"";position:absolute;left:12px;right:12px;bottom:20px;height:60px;background:linear-gradient(120deg,rgba(15,185,177,.15) 0%,rgba(34,211,238,.25) 50%,rgba(37,99,235,.15) 100%);clip-path:polygon(0 100%,10% 60%,25% 75%,40% 35%,55% 55%,70% 20%,85% 40%,100% 10%,100% 100%)}
+
+.section{padding:80px 0}
+.section-alt{background:#f8fafc}
+.section-head{text-align:center;max-width:640px;margin:0 auto 48px}
+.section-head h2{font-size:32px;font-weight:800;letter-spacing:-.02em;margin:12px 0}
+.section-head p{color:var(--text-2);margin:0}
+.eyebrow{font-size:12px;font-weight:800;color:var(--brand-teal-dark);letter-spacing:.08em;text-transform:uppercase}
+
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;box-shadow:var(--shadow-sm);transition:all .2s}
+.feature-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.feature-card .fc-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:14px}
+.feature-card h3{font-size:16px;margin:0 0 6px}
+.feature-card p{font-size:13.5px;color:var(--text-2);margin:0;line-height:1.5}
+
+.module-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.module-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:10px}
+.module-item .mi-dot{width:8px;height:8px;border-radius:50%;background:var(--brand-teal)}
+
+.benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.benefit-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px}
+.benefit-card h3{font-size:17px;margin:0 0 14px}
+.benefit-card ul{padding-left:18px;margin:0;color:var(--text-2);font-size:13.5px;line-height:1.8}
+
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{text-align:center;padding:24px}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(--brand-teal);color:#fff;font-size:20px;font-weight:800;display:grid;place-items:center;margin:0 auto 14px}
+.step h3{margin:0 0 8px;font-size:17px}
+.step p{color:var(--text-2);font-size:13.5px;margin:0}
+
+.security-block{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center}
+.security-block h2{font-size:30px;margin:12px 0}
+.check-list{list-style:none;padding:0;margin:16px 0 0}
+.check-list li{padding:8px 0 8px 30px;position:relative;font-size:14px;color:var(--text-2)}
+.check-list li::before{content:"✓";position:absolute;left:0;top:8px;color:var(--success);font-weight:800}
+.security-icon{font-size:120px;text-align:center;opacity:.9}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.price-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;flex-direction:column;position:relative}
+.price-card.recommended{border:2px solid var(--brand-teal);box-shadow:0 20px 40px -12px rgba(15,185,177,.3);transform:scale(1.02)}
+.price-card.recommended .rec-flag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--brand-teal);color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;letter-spacing:.05em}
+.price-name{font-size:20px;font-weight:800;margin:0 0 8px}
+.price-setup{color:var(--text-3);font-size:12.5px;margin-bottom:4px}
+.price-setup strong{color:var(--text-2)}
+.price-monthly{font-size:34px;font-weight:900;margin:12px 0 4px}
+.price-monthly small{font-size:13px;font-weight:500;color:var(--text-3)}
+.price-features{list-style:none;padding:0;margin:20px 0;flex:1}
+.price-features li{padding:8px 0 8px 24px;position:relative;font-size:13.5px;color:var(--text-2)}
+.price-features li::before{content:"✓";position:absolute;left:0;color:var(--success);font-weight:800}
+.price-card .btn{margin-top:12px}
+
+.faq-list{display:flex;flex-direction:column;gap:10px}
+.faq-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:0;overflow:hidden}
+.faq-q{padding:16px 20px;font-weight:700;font-size:14.5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .2s,padding .2s;color:var(--text-2);font-size:13.5px;line-height:1.6}
+.faq-item.open .faq-a{max-height:200px;padding:0 20px 16px}
+
+.contact-form{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:var(--shadow-sm)}
+
+.home-footer{background:var(--brand-navy);color:#cbd5e1;padding:56px 0 0}
+.footer-inner{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.footer-inner h4{color:#fff;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 14px}
+.footer-inner a{display:block;color:#94a3b8;font-size:13.5px;padding:4px 0}
+.footer-inner a:hover{color:var(--brand-cyan);text-decoration:none}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding:20px 0;margin-top:40px;color:#64748b;font-size:12px}
+
+/* ============================================================
+   4) RESPONSIVE  (was css/responsive.css)
+   ============================================================ */
+@media (max-width:1200px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .grid-3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:992px){
+  .grid-2{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .topbar-search{display:none}
+}
+@media (max-width:900px){
+  .hero-inner,.security-block,.footer-inner{grid-template-columns:1fr}
+  .feature-grid,.module-grid,.benefits-grid,.steps-grid,.pricing-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hero-copy h1{font-size:32px}
+  .price-card.recommended{transform:none}
+}
+@media (max-width:768px){
+  :root{--topbar-h:58px}
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:var(--sidebar-w)}
+  .app-shell.mobile-open .sidebar{transform:translateX(0);box-shadow:var(--shadow-lg)}
+  .app-shell .main{margin-left:0 !important}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .stat-card{padding:16px}
+  .stat-card .stat-value{font-size:22px}
+  .grid-3{grid-template-columns:1fr}
+  .page{padding:16px}
+  .academic-pill span{display:none}
+  .user-info{display:none}
+  .user-menu{padding:4px;border-radius:50%}
+}
+@media (max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .page-title{font-size:18px}
+  .card-head{flex-wrap:wrap;gap:8px}
+}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:90}
+.app-shell.mobile-open .sidebar-overlay{display:block}
+
+/* hide / show helper */
+.view{display:none}
+.view.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     APP ROUTER — One page, two views: #home and #dashboard
+     Navigate via URL hash so browser back/forward works.
+     ============================================================ -->
+
+<!-- ============================================================
+     VIEW 1: PUBLIC HOMEPAGE
+     ============================================================ -->
+<div id="view-home" class="view">
+
+  <header class="home-nav">
+    <div class="container nav-inner">
+      <a href="#home" class="nav-brand">
+        <div class="logo-mark">H</div>
+        <div><strong>HustleNet</strong><small>SCHOOL ERP</small></div>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#modules">Modules</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-outline btn-sm" href="#dashboard">Login / Demo</a>
+        <a class="btn btn-primary btn-sm" href="#dashboard">Register Your School</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="hero-tag">🇺🇬 Built for Ugandan schools</span>
+        <h1>Run Your Entire School From <span class="accent">One Intelligent Platform.</span></h1>
+        <p>Manage students, admissions, school fees, attendance, examinations, timetables, staff, parents, and school operations from one connected platform.</p>
+        <div class="hero-actions">
+          <a href="#dashboard" class="btn btn-primary">Register Your School</a>
+          <a href="#features" class="btn btn-outline">Explore Features</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>100%</strong><small>Cloud-based</small></div>
+          <div><strong>UGX</strong><small>Local pricing</small></div>
+          <div><strong>Multi-tenant</strong><small>Secure by design</small></div>
+        </div>
+      </div>
+      <div class="hero-preview">
+        <div class="preview-window">
+          <div class="preview-bar"><span></span><span></span><span></span></div>
+          <div class="preview-body">
+            <div class="pv-sidebar">
+              <div class="pv-logo">H</div>
+              <div class="pv-item active"></div><div class="pv-item"></div><div class="pv-item"></div>
+              <div class="pv-item"></div><div class="pv-item"></div><div class="pv-item"></div>
+            </div>
+            <div class="pv-main">
+              <div class="pv-top"></div>
+              <div class="pv-cards">
+                <div class="pv-card c1"></div><div class="pv-card c2"></div>
+                <div class="pv-card c3"></div><div class="pv-card c4"></div>
+              </div>
+              <div class="pv-chart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Features</span>
+        <h2>Everything a modern school needs</h2>
+        <p>One login. One connected platform. Every operation in sync.</p></div>
+      <div class="feature-grid" id="featuresGrid"></div>
+    </div>
+  </section>
+
+  <section id="modules" class="section section-alt">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Modules</span>
+        <h2>20+ integrated modules</h2>
+        <p>Activate what you need. Upgrade as your school grows.</p></div>
+      <div class="module-grid" id="modulesGrid"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Why HustleNet</span>
+        <h2>Built for owners, teachers, and parents</h2></div>
+      <div class="benefits-grid">
+        <div class="benefit-card"><h3>🏫 For School Owners</h3>
+          <ul><li>Real-time financial visibility</li><li>Track fee collection &amp; arrears</li><li>Multi-campus ready (Enterprise)</li><li>Audit-ready reports</li></ul></div>
+        <div class="benefit-card"><h3>👩‍🏫 For Teachers</h3>
+          <ul><li>Marks entry in minutes</li><li>Attendance in one click</li><li>Auto-generated report cards</li><li>Class &amp; teacher timetables</li></ul></div>
+        <div class="benefit-card"><h3>👨‍👩‍👧 For Parents</h3>
+          <ul><li>Fee statements &amp; receipts</li><li>Attendance alerts</li><li>Exam results &amp; comments</li><li>School announcements</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">How it works</span>
+        <h2>Live in 3 simple steps</h2></div>
+      <div class="steps-grid">
+        <div class="step"><div class="step-num">1</div><h3>Register</h3><p>Submit your school details and choose a plan.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Onboard</h3><p>We import your students, staff, and fee structure.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Go live</h3><p>Your team logs in and starts running operations.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container security-block">
+      <div><span class="eyebrow">Security</span>
+        <h2>Your school's data, protected</h2>
+        <p>Every school is fully isolated. Data is encrypted in transit, passwords are never stored in plaintext, and privileged actions are audited.</p>
+        <ul class="check-list">
+          <li>Tenant isolation — School A never sees School B</li>
+          <li>Server-side permissions on every request</li>
+          <li>Audit logs for financial and user actions</li>
+          <li>Role-based access for admins, teachers, bursars, parents</li>
+        </ul>
+      </div>
+      <div class="security-icon">🛡️</div>
+    </div>
+  </section>
+
+  <section id="pricing" class="section section-alt">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Pricing</span>
+        <h2>Simple plans in UGX</h2>
+        <p>One-time setup fee + monthly subscription. No hidden costs.</p></div>
+      <div class="pricing-grid" id="pricingGrid"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:800px">
+      <div class="section-head"><span class="eyebrow">FAQ</span><h2>Frequently asked questions</h2></div>
+      <div class="faq-list" id="faqList"></div>
+    </div>
+  </section>
+
+  <section id="contact" class="section section-alt">
+    <div class="container" style="max-width:640px">
+      <div class="section-head"><span class="eyebrow">Contact</span><h2>Request a demo</h2>
+        <p>Tell us about your school and we'll get back to you within 1 business day.</p></div>
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="field"><label class="label">School name</label><input class="input" name="school" required minlength="2" /></div>
+        <div class="field"><label class="label">Your name</label><input class="input" name="name" required /></div>
+        <div class="field"><label class="label">Email</label><input class="input" name="email" type="email" required /></div>
+        <div class="field"><label class="label">Phone</label><input class="input" name="phone" required /></div>
+        <div class="field"><label class="label">Message</label><textarea class="textarea" name="message" rows="4"></textarea></div>
+        <div id="contactMsg" class="field-error hidden"></div>
+        <button class="btn btn-primary btn-block" type="submit">Send request</button>
+        <p class="text-xs text-muted mt-2" style="text-align:center">In demo mode, requests are logged locally. No email is sent until backend + provider are configured.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="container" style="max-width:760px;text-align:center">
+      <span class="eyebrow">About HustleNet</span>
+      <h2>One Platform. Every School Operation. Fully Connected.</h2>
+      <p class="text-muted">HustleNet Technologies builds enterprise-grade software for African schools. Our School Management ERP brings together every workflow — from admissions to payroll — into one secure, connected platform.</p>
+    </div>
+  </section>
+
+  <footer class="home-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="nav-brand" style="color:#fff"><div class="logo-mark">H</div>
+          <div><strong>HustleNet</strong><small>SCHOOL ERP</small></div></div>
+        <p class="text-xs" style="color:#94a3b8;margin-top:12px">One Platform. Every School Operation.<br/>Fully Connected.</p>
+      </div>
+      <div><h4>Product</h4><a href="#features">Features</a><a href="#modules">Modules</a><a href="#pricing">Pricing</a></div>
+      <div><h4>Company</h4><a href="#about">About</a><a href="#contact">Contact</a><a href="#">Careers</a></div>
+      <div><h4>Account</h4><a href="#dashboard">Login</a><a href="#dashboard">Register school</a></div>
+    </div>
+    <div class="footer-bottom"><div class="container">© 2025 HustleNet Technologies. All rights reserved.</div></div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     VIEW 2: DASHBOARD
+     ============================================================ -->
+<div id="view-dashboard" class="view">
+  <div class="app-shell">
+    <div class="main">
+      <div class="page">
+
+        <div class="page-head">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-sub">Welcome back — here's what's happening at your school today.</p>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="grid-3 section-gap">
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Attendance Overview</h3><span class="text-xs text-muted">Today</span></div>
+            <div class="card-pad" id="attendancePanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Fee Collection Summary</h3><span class="text-xs text-muted">This month</span></div>
+            <div class="card-pad" id="feesPanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Examination Overview</h3><span class="text-xs text-muted">This term</span></div>
+            <div class="card-pad" id="examsPanel"></div>
+          </div>
+        </div>
+
+        <div class="grid-3 section-gap">
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Recent Activities</h3></div>
+            <div class="card-pad" id="activityPanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Today's Classes</h3></div>
+            <div class="card-pad" id="classesPanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">School Announcements</h3></div>
+            <div class="card-pad" id="announcementsPanel"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div><h3 class="card-title">Monthly Overview</h3>
+              <p class="card-sub">Attendance %, Fee collections &amp; Expenses (UGX millions)</p></div>
+            <div class="flex gap-2">
+              <span class="badge badge-info">Attendance</span>
+              <span class="badge badge-success">Fees</span>
+              <span class="badge badge-warning">Expenses</span>
+            </div>
+          </div>
+          <div class="card-pad">
+            <div class="chart-box"><canvas id="monthlyChart"></canvas></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SHARED JS — Config, API, Shell, Dashboard, Homepage
+     ============================================================ -->
+<script>
+/* ============================================================
+   1) CONFIG  (was js/config.js)
+   ============================================================ */
+window.HN_CONFIG = {
+  brand: {
+    name: "HustleNet",
+    fullName: "HustleNet School Management ERP",
+    tagline: "One Platform. Every School Operation. Fully Connected.",
+    currency: "UGX",
+  },
+  demoMode: true,
+  apiBase: "/api",
+  pricingPlans: [
+    {
+      id: "starter", name: "Starter", setupFee: 1500000, monthly: 100000, recommended: false,
+      features: [
+        "Student registration", "Admissions", "Class management",
+        "Attendance", "Basic fees management", "Receipts",
+        "Basic reports", "Staff accounts",
+      ],
+    },
+    {
+      id: "professional", name: "Professional", setupFee: 3500000, monthly: 250000, recommended: true,
+      features: [
+        "Everything in Starter", "Examination management", "Report cards",
+        "Timetables", "Parent communications", "Library management",
+        "Transport management", "Advanced financial reports",
+        "Staff management", "Inventory", "Automated reminders",
+        "Advanced analytics",
+      ],
+    },
+    {
+      id: "enterprise", name: "Enterprise", setupFee: 8000000, monthly: 500000, recommended: false,
+      features: [
+        "Everything in Professional", "Multiple campuses where contracted",
+        "Advanced permissions", "Custom workflows", "Advanced reports",
+        "Custom integrations (subject to scope)", "Priority support",
+        "Advanced audit logs", "Custom branding options",
+      ],
+    },
+  ],
+};
+
+window.HN = window.HN || {};
+HN.formatUGX = function (amount, opts = {}) {
+  const n = Number(amount) || 0;
+  const withDecimals = opts.decimals === true;
+  return new Intl.NumberFormat("en-UG", {
+    style: "currency", currency: "UGX",
+    minimumFractionDigits: withDecimals ? 2 : 0,
+    maximumFractionDigits: withDecimals ? 2 : 0,
+  }).format(n).replace("UGX", "UGX ");
+};
+HN.toCents = (v) => Math.round((Number(v) || 0) * 100);
+HN.fromCents = (c) => (Math.round(c) / 100);
+HN.addMoney = (...vals) => HN.fromCents(vals.reduce((a, v) => a + HN.toCents(v), 0));
+HN.subMoney = (a, b) => HN.fromCents(HN.toCents(a) - HN.toCents(b));
+HN.formatDate = function (iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d)) return "—";
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+};
+HN.escapeHtml = function (str) {
+  if (str == null) return "";
+  return String(str).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+};
+
+/* ============================================================
+   2) API  (was js/api.js)
+   ============================================================ */
+(function () {
+  const isDemo = () => window.HN_CONFIG?.demoMode !== false;
+
+  async function request(method, path, body) {
+    const base = window.HN_CONFIG.apiBase;
+    const token = localStorage.getItem("hn_token");
+    const res = await fetch(base + path, {
+      method, credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || `Request failed (${res.status})`);
+    }
+    return res.json();
+  }
+
+  const DEMO = {
+    school: { name: "Bright Future Secondary School", academicYear: "2025" },
+    stats: {
+      totalStudents: 1248, presentToday: 1186, totalTeachers: 62, totalClasses: 36,
+      totalRevenue: 48500000,
+      trends: { students: "+4.2%", present: "+1.1%", teachers: "+0", classes: "+2", revenue: "+8.6%" },
+    },
+    attendance: { present: 1186, absent: 42, late: 15, leave: 5 },
+    fees: { collected: 48500000, outstanding: 12750000, invoiced: 61250000 },
+    exams: { scheduled: 8, inProgress: 2, completed: 4, awaitingApproval: 1 },
+    activities: [
+      { icon: "💳", title: "Fee payment received", desc: "UGX 450,000 — Ssemakula J. (S.2A)", time: "12m ago", color: "green" },
+      { icon: "🎓", title: "New admission accepted", desc: "Nakato A. — S.1 Blue stream", time: "1h ago", color: "blue" },
+      { icon: "📢", title: "Announcement published", desc: "Parents' meeting on Fri 21 Nov", time: "2h ago", color: "purple" },
+      { icon: "📚", title: "Examination scheduled", desc: "Mid-term Maths — S.3 — 09:00", time: "3h ago", color: "orange" },
+    ],
+    todaysClasses: [
+      { time: "08:00", subject: "Mathematics", cls: "S.2A", teacher: "Mr. Okello" },
+      { time: "09:40", subject: "English", cls: "S.3B", teacher: "Ms. Nabirye" },
+      { time: "11:20", subject: "Physics", cls: "S.4A", teacher: "Mr. Kato" },
+      { time: "14:00", subject: "Biology", cls: "S.1C", teacher: "Ms. Achieng" },
+    ],
+    announcements: [
+      { title: "Mid-term exams start Monday", body: "All students must report to their exam rooms by 7:30 AM.", date: "2025-11-17" },
+      { title: "Fees deadline reminder", body: "Term 2 balance due by 30 Nov. Contact the bursar for a plan.", date: "2025-11-15" },
+    ],
+    monthly: {
+      labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov"],
+      attendance: [94, 92, 88, 95, 96, 97],
+      fees: [32, 45, 38, 58, 65, 49],
+      expenses: [22, 25, 24, 28, 30, 26],
+    },
+  };
+
+  const wait = (ms = 120) => new Promise((r) => setTimeout(r, ms));
+
+  window.HN_API = {
+    isDemo,
+    async getDashboard() {
+      if (isDemo()) { await wait(); return DEMO; }
+      return request("GET", "/dashboard");
+    },
+    async getStudents(params = {}) {
+      if (isDemo()) { await wait(); return { items: [], total: 0 }; }
+      const q = new URLSearchParams(params).toString();
+      return request("GET", `/students?${q}`);
+    },
+    async getNotifications() {
+      if (isDemo()) { await wait(60); return { unread: 3 }; }
+      return request("GET", "/notifications");
+    },
+  };
+})();
+
+/* ============================================================
+   3) SHELL  (was js/app.js)
+   ============================================================ */
+(function () {
+  const NAV = [
+    { section: "Overview" },
+    { icon: "grid", label: "Dashboard", href: "#dashboard" },
+
+    { section: "Academics" },
+    { icon: "users", label: "Students", href: "#students" },
+    { icon: "inbox", label: "Admissions", href: "#admissions" },
+    { icon: "book", label: "Academic Management", href: "#academics" },
+    { icon: "calendar", label: "Attendance", href: "#attendance" },
+    { icon: "clipboard", label: "Examinations", href: "#examinations" },
+    { icon: "clock", label: "Timetable", href: "#timetable" },
+    { icon: "edit", label: "Homework", href: "#homework" },
+    { icon: "library", label: "Library", href: "#library" },
+    { icon: "bus", label: "Transport", href: "#transport" },
+
+    { section: "Finance" },
+    { icon: "credit-card", label: "Fees Management", href: "#fees" },
+    { icon: "file-text", label: "Payroll", href: "#payroll" },
+    { icon: "package", label: "Inventory", href: "#inventory" },
+    { icon: "trending-down", label: "Expenses", href: "#expenses" },
+
+    { section: "People" },
+    { icon: "briefcase", label: "Staff Management", href: "#staff" },
+    { icon: "message-circle", label: "Communications", href: "#communications" },
+
+    { section: "System" },
+    { icon: "bar-chart", label: "Reports & Analytics", href: "#reports" },
+    { icon: "shield", label: "User Management", href: "#users" },
+    { icon: "settings", label: "Settings", href: "#settings" },
+    { icon: "star", label: "Subscription & Billing", href: "#subscription" },
+  ];
+
+  const ICONS = {
+    grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+    book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    clipboard: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    edit: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+    library: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/>',
+    bus: '<path d="M8 6v6m8-6v6M2 12h20M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>',
+    "credit-card": '<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+    "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+    package: '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+    "trending-down": '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>',
+    briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+    "message-circle": '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+    "bar-chart": '<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+    star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  };
+  const svg = (name) =>
+    `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ICONS.grid}</svg>`;
+
+  function renderSidebar() {
+    const active = (location.hash || "#dashboard").replace("#", "").toLowerCase();
+    let navHtml = "";
+    NAV.forEach((item) => {
+      if (item.section) {
+        navHtml += `<div class="nav-section">${item.section}</div>`;
+      } else {
+        const hash = item.href.replace("#", "");
+        const isActive = (hash === active || (active === "" && hash === "dashboard")) ? "active" : "";
+        navHtml += `<a class="nav-item ${isActive}" href="${item.href}">${svg(item.icon)}<span>${item.label}</span></a>`;
+      }
+    });
+    return `
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <div class="logo-mark">H</div>
+          <div class="brand-text">HustleNet<small>SCHOOL ERP</small></div>
+        </div>
+        <nav class="sidebar-nav">${navHtml}</nav>
+        <div class="sidebar-footer">
+          <a class="nav-item" href="#home"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Public Site</span></a>
+        </div>
+      </aside>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>`;
+  }
+
+  function renderTopbar() {
+    const user = JSON.parse(localStorage.getItem("hn_user") || "null") || {
+      name: "Grace Nakato", role: "School Administrator", initials: "GN",
+    };
+    return `
+      <header class="topbar">
+        <button class="icon-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="academic-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Academic Year:</span> 2025
+        </div>
+        <div class="topbar-search"><input id="globalSearch" placeholder="Search students, staff, invoices..." /></div>
+        <div class="topbar-spacer"></div>
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="dot" id="notifDot"></span>
+        </button>
+        <div class="user-menu" id="userMenu" title="${user.name} • ${user.role}">
+          <div class="user-avatar">${user.initials || "U"}</div>
+          <div class="user-info"><strong>${user.name}</strong><small>${user.role}</small></div>
+        </div>
+      </header>`;
+  }
+
+  function bootShell() {
+    const shell = document.querySelector("#view-dashboard .app-shell");
+    if (!shell) return;
+    shell.insertAdjacentHTML("afterbegin", renderSidebar());
+    const main = shell.querySelector(".main");
+    if (main) main.insertAdjacentHTML("afterbegin", renderTopbar());
+
+    const toggle = document.getElementById("sidebarToggle");
+    const overlay = document.getElementById("sidebarOverlay");
+    const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+
+    toggle?.addEventListener("click", () => {
+      if (isMobile()) shell.classList.toggle("mobile-open");
+      else {
+        shell.classList.toggle("collapsed");
+        localStorage.setItem("hn_sidebar_collapsed", shell.classList.contains("collapsed"));
+      }
+    });
+    overlay?.addEventListener("click", () => shell.classList.remove("mobile-open"));
+
+    if (!isMobile() && localStorage.getItem("hn_sidebar_collapsed") === "true") {
+      shell.classList.add("collapsed");
+    }
+
+    document.getElementById("userMenu")?.addEventListener("click", () => {
+      if (confirm("Log out of HustleNet ERP?")) {
+        localStorage.removeItem("hn_user");
+        localStorage.removeItem("hn_token");
+        location.hash = "#home";
+      }
+    });
+
+    document.getElementById("notifBtn")?.addEventListener("click", () => {
+      alert("Notifications:\n• 3 unread — 2 fee reminders, 1 admission update.\n\n(Notifications module arrives in Stage 6.)");
+    });
+
+    document.getElementById("globalSearch")?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target.value.trim()) {
+        alert(`Search (module pages land in later stages): "${e.target.value.trim()}"`);
+      }
+    });
+  }
+
+  function demoBanner() {
+    if (window.HN_CONFIG?.demoMode === false) return "";
+    return `<div class="demo-banner"><span class="db-tag">DEMO</span> You are browsing in demonstration mode. Data is fictional. Connect the backend to use real records.</div>`;
+  }
+
+  window.HN_APP = { svg, demoBanner };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    bootShell();
+    if (window.HN_CONFIG?.demoMode !== false) {
+      const main = document.querySelector("#view-dashboard .main");
+      if (main) main.insertAdjacentHTML("afterbegin", demoBanner());
+    }
+  });
+})();
+
+/* ============================================================
+   4) DASHBOARD  (was js/dashboard.js)
+   ============================================================ */
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const svg = () => window.HN_APP?.svg?.("users") || "";
+  const fmtUGX = window.HN.formatUGX;
+
+  function renderStats(stats) {
+    const cards = [
+      { color: "purple", icon: "users",     value: stats.totalStudents.toLocaleString(), label: "Total Students", trend: stats.trends.students },
+      { color: "blue",   icon: "calendar",  value: stats.presentToday.toLocaleString(),  label: "Present Today",  trend: stats.trends.present },
+      { color: "green",  icon: "briefcase", value: stats.totalTeachers.toLocaleString(), label: "Total Teachers", trend: stats.trends.teachers },
+      { color: "orange", icon: "book",      value: stats.totalClasses.toLocaleString(),  label: "Total Classes",  trend: stats.trends.classes },
+      { color: "teal",   icon: "credit-card", value: fmtUGX(stats.totalRevenue), label: "Total Revenue", trend: stats.trends.revenue },
+    ];
+    $("statsGrid").innerHTML = cards.map((c) => {
+      const iconSvg = window.HN_APP?.svg?.(c.icon) || "";
+      return `
+        <div class="stat-card ${c.color}">
+          <div class="stat-icon">${iconSvg}</div>
+          <div class="stat-value">${c.value}</div>
+          <div class="stat-label">${c.label}</div>
+          ${c.trend ? `<span class="stat-trend ${c.trend.startsWith('+') ? 'up' : c.trend === '0' ? 'flat' : 'down'}">${c.trend}</span>` : ""}
+        </div>`;
+    }).join("");
+  }
+
+  function progressRow(label, value, max, color) {
+    const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+    return `
+      <div class="progress-row"><span class="pr-label">${label}</span><span class="pr-val">${value}</span></div>
+      <div class="progress-bar"><span style="width:${pct}%;background:${color}"></span></div>`;
+  }
+
+  function renderAttendance(a) {
+    if (!a) { $("attendancePanel").innerHTML = `<div class="empty-state"><div class="es-icon">📋</div>No attendance recorded today.</div>`; return; }
+    const total = a.present + a.absent + a.late + a.leave;
+    $("attendancePanel").innerHTML =
+      progressRow("Present", a.present, total, "var(--green)") +
+      progressRow("Absent", a.absent, total, "var(--danger)") +
+      progressRow("Late", a.late, total, "var(--warning)") +
+      progressRow("Approved leave", a.leave, total, "var(--blue)");
+  }
+
+  function renderFees(f) {
+    if (!f) { $("feesPanel").innerHTML = `<div class="empty-state"><div class="es-icon">💳</div>No fee data available.</div>`; return; }
+    $("feesPanel").innerHTML = `
+      <div class="progress-row"><span class="pr-label">Collected this month</span><span class="pr-val" style="color:var(--green)">${fmtUGX(f.collected)}</span></div>
+      <div class="progress-row"><span class="pr-label">Outstanding fees</span><span class="pr-val" style="color:var(--danger)">${fmtUGX(f.outstanding)}</span></div>
+      <div class="progress-row"><span class="pr-label">Total invoiced</span><span class="pr-val">${fmtUGX(f.invoiced)}</span></div>
+      <div class="progress-bar" style="margin-top:12px"><span style="width:${Math.round((f.collected/f.invoiced)*100)}%;background:linear-gradient(90deg,var(--brand-teal),var(--brand-cyan))"></span></div>
+      <div class="text-xs text-muted mt-2">Collection rate: ${Math.round((f.collected/f.invoiced)*100)}%</div>`;
+  }
+
+  function renderExams(e) {
+    if (!e) { $("examsPanel").innerHTML = `<div class="empty-state"><div class="es-icon">📝</div>No examinations scheduled.</div>`; return; }
+    const rows = [
+      ["Scheduled", e.scheduled, "badge-info"],
+      ["In progress", e.inProgress, "badge-warning"],
+      ["Completed", e.completed, "badge-success"],
+      ["Awaiting approval", e.awaitingApproval, "badge-danger"],
+    ];
+    $("examsPanel").innerHTML = rows.map(([l, v, b]) => `
+      <div class="progress-row"><span class="pr-label">${l}</span><span class="badge ${b}">${v}</span></div>`).join("");
+  }
+
+  function renderActivities(list) {
+    if (!list?.length) { $("activityPanel").innerHTML = `<div class="empty-state"><div class="es-icon">🔔</div>No recent activity.</div>`; return; }
+    $("activityPanel").innerHTML = `<ul class="activity-list">${list.map((a) => `
+      <li class="activity-item">
+        <div class="activity-dot" style="background:var(--${a.color}-l);color:var(--${a.color})">${a.icon}</div>
+        <div class="activity-body">
+          <div class="at">${a.title}</div>
+          <div class="ad">${a.desc} · ${a.time}</div>
+        </div>
+      </li>`).join("")}</ul>`;
+  }
+
+  function renderClasses(list) {
+    if (!list?.length) { $("classesPanel").innerHTML = `<div class="empty-state"><div class="es-icon">📅</div>No classes scheduled today.</div>`; return; }
+    $("classesPanel").innerHTML = list.map((c) => `
+      <div class="schedule-row">
+        <div class="schedule-time">${c.time}</div>
+        <div class="schedule-body"><div class="sb-name">${c.subject} — ${c.cls}</div><div class="sb-meta">${c.teacher}</div></div>
+      </div>`).join("");
+  }
+
+  function renderAnnouncements(list) {
+    if (!list?.length) { $("announcementsPanel").innerHTML = `<div class="empty-state"><div class="es-icon">📢</div>No announcements.</div>`; return; }
+    $("announcementsPanel").innerHTML = list.map((a) => `
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="font-weight:700;font-size:13px">${a.title}</div>
+        <div class="text-xs text-muted mt-2">${a.body}</div>
+        <div class="text-xs text-muted mt-2">${window.HN.formatDate(a.date)}</div>
+      </div>`).join("");
+  }
+
+  let monthlyChartInstance = null;
+  function renderMonthlyChart(m) {
+    const ctx = document.getElementById("monthlyChart");
+    if (!ctx) return;
+    if (!m || !m.labels?.length) {
+      ctx.parentElement.innerHTML = `<div class="empty-state"><div class="es-icon">📊</div>No historical data to chart yet.</div>`;
+      return;
+    }
+    if (monthlyChartInstance) monthlyChartInstance.destroy();
+    monthlyChartInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: m.labels,
+        datasets: [
+          { label: "Attendance %", data: m.attendance, borderColor: "#2563eb",
+            backgroundColor: "rgba(37,99,235,.08)", tension: 0.35, fill: true, yAxisID: "y" },
+          { label: "Fee collections (M UGX)", data: m.fees, borderColor: "#16a34a",
+            backgroundColor: "rgba(22,163,74,.08)", tension: 0.35, fill: true, yAxisID: "y1" },
+          { label: "Expenses (M UGX)", data: m.expenses, borderColor: "#f59e0b",
+            backgroundColor: "rgba(245,158,11,.08)", tension: 0.35, fill: true, yAxisID: "y1" },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 12 } } } },
+        scales: {
+          y:  { position: "left",  min: 0, max: 100, title: { display: true, text: "Attendance %" }, grid: { color: "#eef2f8" } },
+          y1: { position: "right", min: 0, title: { display: true, text: "UGX (millions)" }, grid: { drawOnChartArea: false } },
+          x:  { grid: { display: false } },
+        },
+      },
+    });
+  }
+
+  let dashboardLoaded = false;
+  async function loadDashboardOnce() {
+    if (dashboardLoaded) return;
+    dashboardLoaded = true;
+    try {
+      const data = await window.HN_API.getDashboard();
+      renderStats(data.stats);
+      renderAttendance(data.attendance);
+      renderFees(data.fees);
+      renderExams(data.exams);
+      renderActivities(data.activities);
+      renderClasses(data.todaysClasses);
+      renderAnnouncements(data.announcements);
+      renderMonthlyChart(data.monthly);
+    } catch (err) {
+      console.error(err);
+      document.getElementById("statsGrid").innerHTML =
+        `<div class="card card-pad" style="grid-column:1/-1;color:var(--danger)">Failed to load dashboard: ${window.HN.escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  window.HN_LOAD_DASHBOARD = loadDashboardOnce;
+})();
+
+/* ============================================================
+   5) HOMEPAGE  (was js/home.js)
+   ============================================================ */
+(function () {
+  const cfg = window.HN_CONFIG;
+  const fmtUGX = window.HN.formatUGX;
+
+  const FEATURES = [
+    { icon: "🎓", color: "purple", title: "Admissions", desc: "Digitize applications, track documents, and enroll students in one flow." },
+    { icon: "💰", color: "green",  title: "Fees & Payments", desc: "Invoices, mobile money, receipts, and real-time balances in UGX." },
+    { icon: "📊", color: "blue",   title: "Analytics", desc: "Track collection, attendance, and performance with live dashboards." },
+    { icon: "📅", color: "orange", title: "Attendance", desc: "Daily registers, alerts, and historical reports per class and student." },
+    { icon: "📝", color: "teal",   title: "Examinations", desc: "Marks entry, weighted grading, report cards, and result approval." },
+    { icon: "👥", color: "purple", title: "Staff & Payroll", desc: "Profiles, leave, salaries, and payslips for every staff member." },
+  ];
+  const MODULES = [
+    "Students","Admissions","Academic Management","Fees Management",
+    "Attendance","Examinations","Timetable","Homework",
+    "Library","Transport","Communications","Staff Management",
+    "Payroll","Inventory","Expenses","Reports & Analytics",
+    "User Management","Settings","Subscription","Audit Logs",
+  ];
+  const FAQ = [
+    ["Do I need a technical team to use HustleNet?", "No. HustleNet runs entirely in the browser. Your staff logs in and uses it like email."],
+    ["How is our school's data protected?", "Each school's data is fully isolated. Passwords are hashed, and all requests are permission-checked server-side."],
+    ["Can I upgrade my plan later?", "Yes. You can move from Starter to Professional or Enterprise at any time — we'll prorate the difference."],
+    ["Is there a free trial?", "Contact us to arrange a demo with sample data before committing to a plan."],
+    ["What payment methods do you support for student fees?", "Cash, Mobile Money, bank transfers, and card payments. All collected in UGX."],
+  ];
+
+  function renderFeatures() {
+    document.getElementById("featuresGrid").innerHTML = FEATURES.map((f) => `
+      <div class="feature-card">
+        <div class="fc-icon" style="background:var(--${f.color}-l)">${f.icon}</div>
+        <h3>${f.title}</h3><p>${f.desc}</p>
+      </div>`).join("");
+  }
+
+  function renderModules() {
+    document.getElementById("modulesGrid").innerHTML = MODULES.map(
+      (m) => `<div class="module-item"><span class="mi-dot"></span>${m}</div>`
+    ).join("");
+  }
+
+  function renderPricing() {
+    document.getElementById("pricingGrid").innerHTML = cfg.pricingPlans.map((p) => `
+      <div class="price-card ${p.recommended ? "recommended" : ""}">
+        ${p.recommended ? `<span class="rec-flag">RECOMMENDED</span>` : ""}
+        <h3 class="price-name">${p.name}</h3>
+        <div class="price-setup">Setup fee: <strong>${fmtUGX(p.setupFee)}</strong></div>
+        <div class="price-monthly">${fmtUGX(p.monthly)}<small>/month</small></div>
+        <ul class="price-features">${p.features.map((f) => `<li>${f}</li>`).join("")}</ul>
+        <a href="#dashboard?plan=${p.id}" class="btn ${p.recommended ? "btn-primary" : "btn-outline"} btn-block">
+          ${p.id === "enterprise" ? "Request a Quote" : "Get Started"}
+        </a>
+      </div>`).join("");
+  }
+
+  function renderFaq() {
+    const list = document.getElementById("faqList");
+    list.innerHTML = FAQ.map(([q, a]) => `
+      <div class="faq-item"><div class="faq-q">${q}<span>+</span></div><div class="faq-a">${a}</div></div>
+    `).join("");
+    list.querySelectorAll(".faq-q").forEach((el) => el.addEventListener("click", () => {
+      el.parentElement.classList.toggle("open");
+    }));
+  }
+
+  function wireContactForm() {
+    const form = document.getElementById("contactForm");
+    const msg = document.getElementById("contactMsg");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      msg.classList.add("hidden");
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.school || data.school.length < 2) return showErr("Please enter your school name.");
+      if (!data.name) return showErr("Please enter your name.");
+      if (!/^\S+@\S+\.\S+$/.test(data.email)) return showErr("Please enter a valid email.");
+      if (!data.phone) return showErr("Please enter a phone number.");
+      const inbox = JSON.parse(localStorage.getItem("hn_contact_requests") || "[]");
+      inbox.push({ ...data, at: new Date().toISOString() });
+      localStorage.setItem("hn_contact_requests", JSON.stringify(inbox));
+      form.reset();
+      msg.className = "text-sm";
+      msg.style.color = "var(--success)";
+      msg.textContent = "Thanks! Your request has been logged. We'll be in touch (demo mode — no email sent yet).";
+      msg.classList.remove("hidden");
+    });
+    function showErr(t) { msg.style.color = "var(--danger)"; msg.textContent = t; msg.classList.remove("hidden"); }
+  }
+
+  renderFeatures();
+  renderModules();
+  renderPricing();
+  renderFaq();
+  wireContactForm();
+})();
+
+/* ============================================================
+   6) ROUTER — hash-based view switching
+   ============================================================ */
+(function () {
+  const views = {
+    home: document.getElementById("view-home"),
+    dashboard: document.getElementById("view-dashboard"),
+  };
+
+  const dashboardRoutes = new Set([
+    "dashboard","students","admissions","academics","attendance","examinations",
+    "timetable","homework","library","transport","fees","payroll","inventory",
+    "expenses","staff","communications","reports","users","settings","subscription",
+  ]);
+
+  function show(viewName) {
+    Object.values(views).forEach((v) => v.classList.remove("active"));
+    (views[viewName] || views.home).classList.add("active");
+    window.scrollTo(0, 0);
+    if (viewName === "dashboard") {
+      setTimeout(() => window.HN_LOAD_DASHBOARD?.(), 50);
+    }
+  }
+
+  function route() {
+    const raw = (location.hash || "#home").replace("#", "").split("?")[0].toLowerCase();
+    if (dashboardRoutes.has(raw)) show("dashboard");
+    else show("home");
+  }
+
+  window.addEventListener("hashchange", route);
+  document.addEventListener("DOMContentLoaded", () => {
+    // If user lands on a hash like #pricing, let browser scroll to it
+    const hash = location.hash || "#home";
+    if (hash.startsWith("#dashboard") || dashboardRoutes.has(hash.replace("#","").toLowerCase())) {
+      show("dashboard");
+    } else {
+      show("home");
+      if (hash && !["#home"].includes(hash)) {
+        const target = document.querySelector(hash);
+        if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth" }), 30);
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
